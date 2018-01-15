@@ -169,9 +169,6 @@ public class ReplaceEXDF {
 										chunk.seek(exdfDatasetSE.offset);
 										chunk.writeIntBigEndian(newFFXIVString.length);
 										// 更新文本内容
-										if(replaceFile.equals("EXD/quest/030/StmBdi102_03004.EXH") && listEntryIndex.equals(26)){
-											System.out.println("TEST");
-										}
 										String transKey = replaceFile.substring(0, replaceFile.lastIndexOf(".")).toLowerCase() + "_" + String.valueOf(listEntryIndex) + "_" + String.valueOf(stringCount);
 										if (Config.getConfigResource("transtable") != null && Config.getProperty("transtable", transKey) != null){
 											newFFXIVString = ArrayUtil.append(newFFXIVString, Base64.decode(Config.getProperty("transtable", transKey)));
