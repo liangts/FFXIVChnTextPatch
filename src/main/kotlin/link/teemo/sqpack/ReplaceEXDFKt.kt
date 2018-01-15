@@ -37,7 +37,7 @@ class ReplaceEXDFKt {
             Config.setConfigResource("transtable", "conf" + File.separator + "transtable.properties")
             Config.setConfigResource("transtring", "conf" + File.separator + "transtring.properties")
             // 遍历替换
-            ReplaceEXDF(pathToIndex, resourceFolder + File.separator + "0a0000.win32.index", exhFile, false, panel).replaceSource();
+            ReplaceEXDF(pathToIndex, resourceFolder + File.separator + "0a0000.win32.index", exhFile, Config.getProperty("UseCNResource")?.toBoolean(), false, panel).replaceSource();
         }
 
         @Throws(IOException::class, FileNotFoundException::class)

@@ -16,10 +16,7 @@ import link.teemo.sqpack.builder.BinaryBlockBuilder;
 import link.teemo.sqpack.builder.EXDFBuilder;
 import link.teemo.sqpack.model.*;
 import link.teemo.sqpack.swing.TextPatchPanel;
-import link.teemo.sqpack.util.ArrayUtil;
-import link.teemo.sqpack.util.FFCRC;
-import link.teemo.sqpack.util.LERandomAccessFile;
-import link.teemo.sqpack.util.LERandomBytes;
+import link.teemo.sqpack.util.*;
 
 
 public class ReplaceEXDF {
@@ -34,13 +31,13 @@ public class ReplaceEXDF {
 	private boolean cnEXDFileAvailable;
 	private boolean cnEntryAvailable;
 
-	public ReplaceEXDF(String pathToIndexSE, String pathToIndexCN, List<String> fileList, Boolean ignoreDiff, TextPatchPanel textPatchPanel) {
+	public ReplaceEXDF(String pathToIndexSE, String pathToIndexCN, List<String> fileList, Boolean cnResourceAvailable, Boolean ignoreDiff, TextPatchPanel textPatchPanel) {
 		this.pathToIndexSE = pathToIndexSE;
 		this.pathToIndexCN = pathToIndexCN;
 		this.fileList = fileList;
 		this.ignoreDiff = ignoreDiff;
 		this.textPatchPanel = textPatchPanel;
-		this.cnResourceAvailable = true;
+		this.cnResourceAvailable = cnResourceAvailable == null ? true : cnResourceAvailable;
 	}
 
 	public void replaceSource() throws Exception {
@@ -96,6 +93,8 @@ public class ReplaceEXDF {
 					} catch (Exception cnEXHFileException) {
 						cnEXHFileAvailable = false;
 					}
+				}else{
+					cnEXHFileAvailable = false;
 				}
 				if (exhSE.getLangs().length > 0) {
 					// 根据头文件 轮询资源文件
@@ -155,8 +154,11 @@ public class ReplaceEXDF {
 								if (exdfDatasetSE.type == 0) {
 									byte[] jaBytes = exdfEntryJA.getString(exdfDatasetSE.offset);
 									String jaStr = new String(jaBytes, "UTF-8");
-									if ( (pattern.matcher(jaStr).find() && jaStr.contains("_"))
-											|| (jaBytes.length > 4 && jaBytes[0] == 0x02 && (jaBytes[1] == 0x28 || jaBytes[1] == 0x40) && ((int)jaBytes[2] + 3 == jaBytes.length)) ) {
+									String jaFFStr = FFXIVString.parseFFXIVString(jaBytes);
+									// 跳过脚本指针和资源引用
+									if ((pattern.matcher(jaStr).find() && jaStr.contains("_"))
+											|| (jaBytes.length > 4 && jaBytes[0] == 0x02 && (jaBytes[1] == 0x28 || jaBytes[1] == 0x40) && ((int)jaBytes[2] + 3 == jaBytes.length))
+											|| (Boolean.parseBoolean(Config.getProperty("SkipRefString")) && jaFFStr.contains("<ref:") && jaFFStr.contains(">"))){
 										// 更新Chunk指针
 										chunk.seek(exdfDatasetSE.offset);
 										chunk.writeIntBigEndian(newFFXIVString.length);
@@ -214,25 +216,14 @@ public class ReplaceEXDF {
 	}
 
 	private static byte[] convertString(byte[] chBytes){
-
-
-		// 00 54 51 51 02 01 41 03 45 04
-//		if(new String(chBytes).equals("200")){
-//			System.out.println(Config.getProperty("Language"));
-//		}
-
-		if(Config.getProperty("Language").equals("繁體中文") || Config.getProperty("Language").equals("正體中文")) {
+			if(Config.getProperty("Language").equals("繁體中文") || Config.getProperty("Language").equals("正體中文")) {
 			try {
 				byte[] newFFXIVStringBytes = new byte[0];
-
 				byte[] chBytesMirror = new byte[chBytes.length];
-
 				ByteBuffer buffIn = ByteBuffer.wrap(chBytes);
 				buffIn.order(ByteOrder.LITTLE_ENDIAN);
-
 				ByteBuffer buffOut = ByteBuffer.wrap(chBytesMirror);
 				buffIn.order(ByteOrder.LITTLE_ENDIAN);
-
 				while (buffIn.hasRemaining()) {
 					byte b = buffIn.get();
 					if (b == 2) {
@@ -253,8 +244,6 @@ public class ReplaceEXDF {
 					buffOut.clear();
 					newFFXIVStringBytes = ArrayUtil.append(newFFXIVStringBytes, ChineseHelper.convertToTraditionalChinese(new String(bytes, "UTF-8")).getBytes("UTF-8"));
 				}
-
-
 				return newFFXIVStringBytes;
 			}catch (Exception e){}
 

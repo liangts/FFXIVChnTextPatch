@@ -45,7 +45,7 @@
     得到差异原因
     
     解决方案：
-    将022810FF0B42656173745472696265E8020C03(HexString)转换成Base64
+    将022810FF0B42656173745472696265E8020B03(HexString)转换成Base64
     然后黏贴进trastable.properties文件内
     exd/addon_102517_1=AigQ/wtCZWFzdFRyaWJl6AIMAw==
     还原并重新汉化文件 问题解决
