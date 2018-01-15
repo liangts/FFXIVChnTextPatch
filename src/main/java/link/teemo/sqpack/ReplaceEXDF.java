@@ -158,7 +158,9 @@ public class ReplaceEXDF {
 									// 跳过脚本指针和资源引用
 									if ((pattern.matcher(jaStr).find() && jaStr.contains("_"))
 											|| (jaBytes.length > 4 && jaBytes[0] == 0x02 && (jaBytes[1] == 0x28 || jaBytes[1] == 0x40) && ((int)jaBytes[2] + 3 == jaBytes.length))
-											|| (Boolean.parseBoolean(Config.getProperty("SkipRefString")) && jaFFStr.contains("<ref:") && jaFFStr.contains(">"))){
+											|| (Boolean.parseBoolean(Config.getProperty("Skip02String")) && ArrayUtil.indexOf(jaBytes, new byte[]{0x02}) != -1)
+											|| (Boolean.parseBoolean(Config.getProperty("SkipRefString")) && jaFFStr.contains("<ref:") && jaFFStr.contains(">"))
+											 ){
 										// 更新Chunk指针
 										chunk.seek(exdfDatasetSE.offset);
 										chunk.writeIntBigEndian(newFFXIVString.length);
