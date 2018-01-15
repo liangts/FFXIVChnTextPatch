@@ -179,7 +179,7 @@ public class ReplaceEXDF {
 										}else if (Config.getConfigResource("transtring") != null && Config.getProperty("transtring", jaStr) != null){
 											newFFXIVString = ArrayUtil.append(newFFXIVString, Config.getProperty("transtring", jaStr).getBytes("UTF-8"));
 										} else {
-											if (cnEXHFileAvailable && cnEXDFileAvailable && cnEntryAvailable && exdfEntryCN.getString(datasetMap.get(exdfDatasetSE).offset).length > 0){
+											if (cnEXHFileAvailable && cnEXDFileAvailable && cnEntryAvailable && jaBytes.length > 0 && exdfEntryCN.getString(datasetMap.get(exdfDatasetSE).offset).length > 0){
 												byte[] chBytes = exdfEntryCN.getString(datasetMap.get(exdfDatasetSE).offset);
 												newFFXIVString = ArrayUtil.append(newFFXIVString, convertString(chBytes));
 											}else {
