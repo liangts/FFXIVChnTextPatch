@@ -27,9 +27,8 @@ public class ReplaceEXDF {
 	private Boolean ignoreDiff;
 	private TextPatchPanel textPatchPanel;
 	private boolean cnResourceAvailable;
-	private boolean cnEXHFileAvailable;
-	private boolean cnEXDFileAvailable;
-	private boolean cnEntryAvailable;
+
+	private HashMap<String, byte[]> exMap;
 
 	public ReplaceEXDF(String pathToIndexSE, String pathToIndexCN, List<String> fileList, Boolean cnResourceAvailable, Boolean ignoreDiff, TextPatchPanel textPatchPanel) {
 		this.pathToIndexSE = pathToIndexSE;
@@ -38,6 +37,7 @@ public class ReplaceEXDF {
 		this.ignoreDiff = ignoreDiff;
 		this.textPatchPanel = textPatchPanel;
 		this.cnResourceAvailable = cnResourceAvailable == null ? true : cnResourceAvailable;
+		this.exMap = new HashMap();
 	}
 
 	public void replaceSource() throws Exception {
@@ -51,6 +51,14 @@ public class ReplaceEXDF {
 		LERandomAccessFile leDatFile    = new LERandomAccessFile(pathToIndexSE.replace("index", "dat0"), "rw");
 		long datLength = leDatFile.length();
 		leDatFile.seek(datLength);
+		System.out.println("Loading ExMap...");
+		try {
+		    if(Boolean.parseBoolean(Config.getProperty("UseExMap"))) {
+                exMap = new EXDFUtil(pathToIndexSE, pathToIndexCN, fileList).exCompleteJournalSE(exMap);
+                exMap = new EXDFUtil(pathToIndexSE, pathToIndexCN, fileList).exQuestSE(exMap);
+            }
+		}catch (Exception mapLoadingException){}
+		System.out.println("Loading ExMap Complete");
 		// 根据传入的文件进行遍历
         int fileCount = 0;
 		for (String replaceFile : fileList) {
@@ -72,7 +80,7 @@ public class ReplaceEXDF {
 				EXHFFile exhSE = new EXHFFile(exhFileSE);
 				EXHFFile exhCN = null;
 				HashMap<EXDFDataset, EXDFDataset> datasetMap = new HashMap();
-				cnEXHFileAvailable = true;
+				boolean cnEXHFileAvailable = true;
 				if(cnResourceAvailable) {
 					try {
 						SqPackIndexFile exhIndexFileCN = indexCN.get(filePatchCRC).getFiles().get(exhFileCRC);
@@ -115,7 +123,7 @@ public class ReplaceEXDF {
 						EXDFFile ja_exd = new EXDFFile(exdFileJA);
 						HashMap<Integer, byte[]> jaExdList = ja_exd.getEntrys();
 						HashMap<Integer, byte[]> chsExdList = null;
-						cnEXDFileAvailable = true;
+						boolean cnEXDFileAvailable = true;
 						if (cnEXHFileAvailable){
 							try{
 								Integer exdFileCRCCN = FFCRC.ComputeCRC((fileName.replace(".EXH", "_" + String.valueOf(exdfPage.pageNum) + "_CHS.EXD")).toLowerCase().getBytes());
@@ -132,7 +140,7 @@ public class ReplaceEXDF {
 							Integer listEntryIndex = listEntry.getKey();
 							EXDFEntry exdfEntryJA = new EXDFEntry(listEntry.getValue(), exhSE.getDatasetChunkSize());
 							EXDFEntry exdfEntryCN = null;
-							cnEntryAvailable = true;
+							boolean cnEntryAvailable = true;
 							if (cnEXDFileAvailable){
 								try{
 									byte[] data = chsExdList.get(listEntryIndex);
@@ -178,7 +186,9 @@ public class ReplaceEXDF {
 											newFFXIVString = ArrayUtil.append(newFFXIVString, Base64.decode(Config.getProperty("transtable", transKey)));
 										}else if (Config.getConfigResource("transtring") != null && Config.getProperty("transtring", jaStr) != null){
 											newFFXIVString = ArrayUtil.append(newFFXIVString, Config.getProperty("transtring", jaStr).getBytes("UTF-8"));
-										} else {
+										}else if (exMap.get(transKey) != null){
+                                            newFFXIVString = ArrayUtil.append(newFFXIVString, exMap.get(transKey));
+                                        }else {
 											if (cnEXHFileAvailable && cnEXDFileAvailable && cnEntryAvailable && jaBytes.length > 0 && exdfEntryCN.getString(datasetMap.get(exdfDatasetSE).offset).length > 0){
 												byte[] chBytes = exdfEntryCN.getString(datasetMap.get(exdfDatasetSE).offset);
 												newFFXIVString = ArrayUtil.append(newFFXIVString, convertString(chBytes));
