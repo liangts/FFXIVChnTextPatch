@@ -226,7 +226,7 @@ public class EXDFUtil {
                         if (exdfDatasetSE.type == 0x0 && exdfDatasetSE.offset == 0x0) {
                             value = exdfEntryJA.getString(exdfDatasetSE.offset);
                         }
-                        if(key != null && value != null && value.length > 0){
+                        if(key != null && key != 0 && value != null && value.length > 0){
                             competeJournalMap.put(key, value);
                             break;
                         }
@@ -281,7 +281,7 @@ public class EXDFUtil {
                         if (exdfDatasetSE.type == 0x7 && exdfDatasetSE.offset == 0x4) {
                             Integer key = exdfEntryJA.getInt(exdfDatasetSE.offset);
                             if(sourceMap.get(key) != null){
-                                exMap.put("CompleteJournal_".toLowerCase() + String.valueOf(listEntryIndex) + "_1",sourceMap.get(key));
+                                exMap.put(("EXD/CompleteJournal_".toLowerCase() + String.valueOf(listEntryIndex) + "_1").toLowerCase(),sourceMap.get(key));
                             }
                             break;
                         }
@@ -340,7 +340,7 @@ public class EXDFUtil {
                         if (exdfDatasetSE.type == 0x0 && exdfDatasetSE.offset == 0x968) {
                             key = new String(exdfEntryJA.getString(exdfDatasetSE.offset),"UTF-8");
                         }
-                        if(key != null && value != null && value.length > 0){
+                        if(key != null && key.length() > 0 && value != null && value.length > 0){
                             questMap.put(key, value);
                             break;
                         }
@@ -395,7 +395,7 @@ public class EXDFUtil {
                         if (exdfDatasetSE.type == 0x0 && exdfDatasetSE.offset == 0x968) {
                             String key = new String(exdfEntryJA.getString(exdfDatasetSE.offset),"UTF-8");
                             if(sourceMap.get(key) != null){
-                                exMap.put("Quest_".toLowerCase() + String.valueOf(listEntryIndex) + "_1",sourceMap.get(key));
+                                exMap.put(("EXD/Quest_".toLowerCase() + String.valueOf(listEntryIndex) + "_1").toLowerCase(),sourceMap.get(key));
                             }
                             break;
                         }
