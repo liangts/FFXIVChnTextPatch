@@ -29,7 +29,7 @@ public class ReplaceEXDF {
 	private TextPatchPanel textPatchPanel;
 	private boolean cnResourceAvailable;
 
-	private HashMap<String, byte[]> exMap;
+	private HashMap<String, byte[]> exQuestMap;
 
 	public ReplaceEXDF(String pathToIndexSE, String pathToIndexCN, List<String> fileList, Boolean cnResourceAvailable, Boolean ignoreDiff, TextPatchPanel textPatchPanel) {
 		this.pathToIndexSE = pathToIndexSE;
@@ -38,7 +38,7 @@ public class ReplaceEXDF {
 		this.ignoreDiff = ignoreDiff;
 		this.textPatchPanel = textPatchPanel;
 		this.cnResourceAvailable = cnResourceAvailable == null ? true : cnResourceAvailable;
-		this.exMap = new HashMap();
+		this.exQuestMap = new HashMap();
 	}
 
 	public void replaceSource() throws Exception {
@@ -52,14 +52,14 @@ public class ReplaceEXDF {
 		LERandomAccessFile leDatFile    = new LERandomAccessFile(pathToIndexSE.replace("index", "dat0"), "rw");
 		long datLength = leDatFile.length();
 		leDatFile.seek(datLength);
-		System.out.println("Loading ExMap...");
+		System.out.println("Loading exQuestMap...");
 		try {
-		    if(Boolean.parseBoolean(Config.getProperty("UseExMap"))) {
-                exMap = new EXDFUtil(pathToIndexSE, pathToIndexCN, fileList).exCompleteJournalSE(exMap);
-                exMap = new EXDFUtil(pathToIndexSE, pathToIndexCN, fileList).exQuestSE(exMap);
+		    if(Boolean.parseBoolean(Config.getProperty("UseExQuestMap"))) {
+                exQuestMap = new EXDFUtil(pathToIndexSE, pathToIndexCN, fileList).exCompleteJournalSE(exQuestMap);
+                exQuestMap = new EXDFUtil(pathToIndexSE, pathToIndexCN, fileList).exQuestSE(exQuestMap);
             }
 		}catch (Exception mapLoadingException){}
-		System.out.println("Loading ExMap Complete");
+		System.out.println("Loading exQuestMap Complete");
 		List skipFiles = Arrays.asList(Config.getProperty("SkipFiles").split("|"));
 		// 根据传入的文件进行遍历
         int fileCount = 0;
@@ -188,8 +188,8 @@ public class ReplaceEXDF {
 											newFFXIVString = ArrayUtil.append(newFFXIVString, Base64.decode(Config.getProperty("transtable", transKey)));
 										}else if (Config.getConfigResource("transtring") != null && Config.getProperty("transtring", jaStr) != null){
 											newFFXIVString = ArrayUtil.append(newFFXIVString, Config.getProperty("transtring", jaStr).getBytes("UTF-8"));
-										}else if (exMap.get(transKey) != null){
-                                            newFFXIVString = ArrayUtil.append(newFFXIVString, exMap.get(transKey));
+										}else if (exQuestMap.get(transKey) != null){
+                                            newFFXIVString = ArrayUtil.append(newFFXIVString, exQuestMap.get(transKey));
                                         }else if (skipFiles.contains(replaceFile.substring(0, replaceFile.lastIndexOf(".")).toLowerCase())){
                                             newFFXIVString = ArrayUtil.append(newFFXIVString, jaBytes);
                                         }else {
