@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
@@ -59,6 +60,7 @@ public class ReplaceEXDF {
             }
 		}catch (Exception mapLoadingException){}
 		System.out.println("Loading ExMap Complete");
+		List skipFiles = Arrays.asList(Config.getProperty("SkipFiles").split("|"));
 		// 根据传入的文件进行遍历
         int fileCount = 0;
 		for (String replaceFile : fileList) {
@@ -188,6 +190,8 @@ public class ReplaceEXDF {
 											newFFXIVString = ArrayUtil.append(newFFXIVString, Config.getProperty("transtring", jaStr).getBytes("UTF-8"));
 										}else if (exMap.get(transKey) != null){
                                             newFFXIVString = ArrayUtil.append(newFFXIVString, exMap.get(transKey));
+                                        }else if (skipFiles.contains(replaceFile.substring(0, replaceFile.lastIndexOf(".")).toLowerCase())){
+                                            newFFXIVString = ArrayUtil.append(newFFXIVString, jaBytes);
                                         }else {
 											if (cnEXHFileAvailable && cnEXDFileAvailable && cnEntryAvailable && jaBytes.length > 0 && exdfEntryCN.getString(datasetMap.get(exdfDatasetSE).offset).length > 0){
 												byte[] chBytes = exdfEntryCN.getString(datasetMap.get(exdfDatasetSE).offset);
