@@ -183,9 +183,6 @@ public class ReplaceEXDF {
 										chunk.seek(exdfDatasetSE.offset);
 										chunk.writeIntBigEndian(newFFXIVString.length);
 										// 更新文本内容
-										if(replaceFile.substring(0, replaceFile.lastIndexOf(".")).toLowerCase().equals("exd/completejournal")){
-											System.out.println("1");
-										}
 										String transKey = replaceFile.substring(0, replaceFile.lastIndexOf(".")).toLowerCase() + "_" + String.valueOf(listEntryIndex) + "_" + String.valueOf(stringCount);
 										if (Config.getConfigResource("transtable") != null && Config.getProperty("transtable", transKey) != null){
 											newFFXIVString = ArrayUtil.append(newFFXIVString, Base64.decode(Config.getProperty("transtable", transKey)));
