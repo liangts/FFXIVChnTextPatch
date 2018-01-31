@@ -3,6 +3,7 @@ package link.teemo.sqpack;
 import com.shenou.fs.core.utils.res.Config;
 import com.sun.org.apache.xml.internal.security.utils.Base64;
 import link.teemo.sqpack.util.ArrayUtil;
+import link.teemo.sqpack.util.FFXIVString;
 import link.teemo.sqpack.util.HexUtils;
 
 import java.io.File;
@@ -10,30 +11,22 @@ import java.io.File;
 public class TranstringTest {
     public static void main(String[] args) throws  Exception{
         byte[] br = HexUtils.hexStringToBytes("02100103");
-        String line1 = "骑上你的星光熊。";
-        String line2 = "它就是为了星芒祭存在。";
-        byte[] target = new byte[0];
-        target = ArrayUtil.append(target, line1.getBytes("UTF-8"));
-        target = ArrayUtil.append(target, br);
-        target = ArrayUtil.append(target, line2.getBytes("UTF-8"));
-        System.out.println(Base64.encode(target));
-
-        byte[] switchs = HexUtils.hexStringToBytes("02097AE948FF0AE382B3E382ABE38396FF2002081CE905FF0AE382B3E382ABE38396FF0DE3839DE383A9E383AAE382B903FF10E38395E382A7E383ABE382ABE38389FF0AE382B3E382ABE38396FF0DE3839DE383A9E383AAE382B9FF2002081CE905FF0AE382B3E382ABE38396FF0DE3839DE383A9E383AAE382B90303");
-        line1 = "星芒祭实行委员会的神父培育出来的熊。名字是，";
-        line2 = "。为了让孩子们快乐，学会了投礼物饼干的特技。那特技，经证明可以有效的搜寻偷星芒祭装饰的盗贼。";
-        target = new byte[0];
-        target = ArrayUtil.append(target, line1.getBytes("UTF-8"));
-        target = ArrayUtil.append(target, switchs);
-        target = ArrayUtil.append(target, line2.getBytes("UTF-8"));
-        System.out.println(Base64.encode(target));
-
-        line1 = "节日狂欢！";
-        target = new byte[0];
-        target = ArrayUtil.append(target, line1.getBytes("UTF-8"));
-        System.out.println(Base64.encode(target));
-
-        Config.setConfigResource("transtable", "conf" + File.separator + "transtable.properties");
-        Config.setConfigResource("transtring", "conf" + File.separator + "transtring.properties");
-        System.out.println(Config.getProperty("transtring", "カーバンクル・アクアマリン"));
+        //技能不能注册为快捷键
+        //030210010302100103021306FEFFFFFF6603E280BBE8BF99E4B8AAE68A80E883BDE4B88DE883BDE6B3A8E5868CE4B8BAE5BFABE68DB7E994AE021302EC03
+        //0210010302100103021306FEFFFFFF6603E280BBE8AFA5E68A80E883BDE697A0E6B395E8AEBEE7BDAEE588B0E783ADE994AEE6A08F021302EC03
+        //固定咏唱
+        //02100103E8BF99E9AD94E6B395E69C89E59BBAE69C89E79A84E5868DE5928FE594B1E697B6E997B4
+        //02100103E6ADA4E9AD94E6B395E69C89E59BBAE69C89E79A84E5868DE5928FE594B1E697B6E997B4
+        String test = "陷于黑暗之中，命中率降低";
+        //空中霸王
+        //达达鲁玛
+        String test2 = "红色";
+        String hexStr = "E6B0B4E6B3A5E99984E79D80E78AB6E68081EFBC8CE6ADA3E59CA8E98090E6B890E79FB3E58C96E38082E59CA8E69588E69E9CE7BB93E69D9FE697B6E8BF9BE585A5E79FB3E58C96E78AB6E68081";
+        System.out.println(hexStr);
+        System.out.println(HexUtils.bytesToHexStringWithOutSpace(test.getBytes("UTF-8")));
+        System.out.println(FFXIVString.parseFFXIVString(HexUtils.hexStringToBytes(hexStr)));
+        hexStr = hexStr.replace(HexUtils.bytesToHexStringWithOutSpace(test.getBytes("UTF-8")),HexUtils.bytesToHexStringWithOutSpace(test2.getBytes("UTF-8")));
+        System.out.println(hexStr);
+        System.out.println(FFXIVString.parseFFXIVString(HexUtils.hexStringToBytes(hexStr)));
     }
 }

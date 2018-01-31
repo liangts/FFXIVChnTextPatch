@@ -185,7 +185,7 @@ public class ReplaceEXDF {
 										// 更新文本内容
 										String transKey = replaceFile.substring(0, replaceFile.lastIndexOf(".")).toLowerCase() + "_" + String.valueOf(listEntryIndex) + "_" + String.valueOf(stringCount);
 										if (Config.getConfigResource("transtable") != null && Config.getProperty("transtable", transKey) != null){
-											newFFXIVString = ArrayUtil.append(newFFXIVString, Base64.decode(Config.getProperty("transtable", transKey)));
+											newFFXIVString = ArrayUtil.append(newFFXIVString, HexUtils.hexStringToBytes(Config.getProperty("transtable", transKey)));
 										}else if (Config.getConfigResource("transtring") != null && Config.getProperty("transtring", jaStr) != null){
 											newFFXIVString = ArrayUtil.append(newFFXIVString, Config.getProperty("transtring", jaStr).getBytes("UTF-8"));
 										}else if (exQuestMap.get(transKey) != null){
@@ -193,7 +193,7 @@ public class ReplaceEXDF {
                                         }else if (skipFiles.contains(replaceFile.substring(0, replaceFile.lastIndexOf(".")).toLowerCase())){
                                             newFFXIVString = ArrayUtil.append(newFFXIVString, jaBytes);
                                         }else {
-											if (cnEXHFileAvailable && cnEXDFileAvailable && cnEntryAvailable && jaBytes.length > 0 && exdfEntryCN.getString(datasetMap.get(exdfDatasetSE).offset).length > 0){
+											if (cnEXHFileAvailable && cnEXDFileAvailable && cnEntryAvailable && jaBytes.length > 0 && datasetMap.get(exdfDatasetSE)!=null && exdfEntryCN.getString(datasetMap.get(exdfDatasetSE).offset).length > 0){
 												byte[] chBytes = exdfEntryCN.getString(datasetMap.get(exdfDatasetSE).offset);
 												newFFXIVString = ArrayUtil.append(newFFXIVString, convertString(chBytes));
 											}else {
