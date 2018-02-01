@@ -184,9 +184,9 @@ public class ReplaceEXDF {
 										chunk.writeIntBigEndian(newFFXIVString.length);
 										// 更新文本内容
 										String transKey = replaceFile.substring(0, replaceFile.lastIndexOf(".")).toLowerCase() + "_" + String.valueOf(listEntryIndex) + "_" + String.valueOf(stringCount);
-										if (Config.getConfigResource("transtable") != null && Config.getProperty("transtable", transKey) != null){
+										if (Config.getConfigResource("transtable") != null && Config.getProperty("transtable", transKey) != null && Config.getProperty("transtable", transKey).length() >0 ){
 											newFFXIVString = ArrayUtil.append(newFFXIVString, HexUtils.hexStringToBytes(Config.getProperty("transtable", transKey)));
-										}else if (Config.getConfigResource("transtring") != null && Config.getProperty("transtring", jaStr) != null){
+										}else if (Config.getConfigResource("transtring") != null && Config.getProperty("transtring", jaStr) != null && Config.getProperty("transtring", jaStr).length() > 0){
 											newFFXIVString = ArrayUtil.append(newFFXIVString, Config.getProperty("transtring", jaStr).getBytes("UTF-8"));
 										}else if (exQuestMap.get(transKey) != null){
                                             newFFXIVString = ArrayUtil.append(newFFXIVString, exQuestMap.get(transKey));
