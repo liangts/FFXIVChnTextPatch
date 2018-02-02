@@ -47,35 +47,35 @@ public class SourceMapTest {
             }
         }
 
-        Config.setConfigResource("conf" + File.separator + "transtring.properties");
-        System.out.println(Config.getProperty("被検世界「シグマ」V1.0"));
+//        Config.setConfigResource("conf" + File.separator + "transtring.properties");
+//        System.out.println(Config.getProperty("被検世界「シグマ」V1.0"));
 //        Config.setProperty(":","魔陶器：解咒");
 //        Config.saveProperty();
-//        FileOutputStream out = new FileOutputStream("conf" + File.separator + "pk.properties");
-//        OutputStreamWriter outWriter = new OutputStreamWriter(out, "UTF-8");
-//        BufferedWriter bufWrite = new BufferedWriter(outWriter);
-//        iter = pkMap.entrySet().iterator();
-//        while (iter.hasNext()) {
-//            Map.Entry<String,String> entry = (Map.Entry) iter.next();
-//            String key = entry.getKey();
-//            String val = entry.getValue();
-//            bufWrite.write(key.replace(":","\\:") + "=" + val);
-//            bufWrite.newLine();
-//        }
-//        bufWrite.close();
-//        outWriter.close();
-//        out.close();
-//
-        File file = new File("C:\\Users\\SOX\\Desktop\\4.2\\instancedatatest.txt");
-        FileReader fileReader = new FileReader(file);
-        BufferedReader bufferedReader=new BufferedReader(fileReader);
-        while ((line=bufferedReader.readLine())!=null) {
-            arrs = line.split("[|]");
-            if(arrs.length>1)
-            System.out.println("exd/instancecontenttextdata_" + arrs[0] + "_1=" + HexUtils.bytesToHexStringWithOutSpace(arrs[1].getBytes("UTF-8")));
+        FileOutputStream out = new FileOutputStream("conf" + File.separator + "pk.properties");
+        OutputStreamWriter outWriter = new OutputStreamWriter(out, "UTF-8");
+        BufferedWriter bufWrite = new BufferedWriter(outWriter);
+        iter = pkMap.entrySet().iterator();
+        while (iter.hasNext()) {
+            Map.Entry<String,String> entry = (Map.Entry) iter.next();
+            String key = entry.getKey();
+            String val = entry.getValue();
+            bufWrite.write(key.replace(":","\\:") + "=" + val);
+            bufWrite.newLine();
         }
-        srcBufferedReader.close();
-        srcFileReader.close();
+        bufWrite.close();
+        outWriter.close();
+        out.close();
+//
+//        File file = new File("C:\\Users\\SOX\\Desktop\\4.2\\instancedatatest.txt");
+//        FileReader fileReader = new FileReader(file);
+//        BufferedReader bufferedReader=new BufferedReader(fileReader);
+//        while ((line=bufferedReader.readLine())!=null) {
+//            arrs = line.split("[|]");
+//            if(arrs.length>1)
+//            System.out.println("exd/instancecontenttextdata_" + arrs[0] + "_1=" + HexUtils.bytesToHexStringWithOutSpace(arrs[1].getBytes("UTF-8")));
+//        }
+//        srcBufferedReader.close();
+//        srcFileReader.close();
 
     }
 }
