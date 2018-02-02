@@ -27,17 +27,19 @@ public class ReplaceEXDF {
 	private List<String> fileList;
 	private Boolean ignoreDiff;
 	private TextPatchPanel textPatchPanel;
-	private boolean cnResourceAvailable;
+	private Boolean cnResourceAvailable;
+	private Boolean teemoResourceAvailable;
 
 	private HashMap<String, byte[]> exQuestMap;
 
-	public ReplaceEXDF(String pathToIndexSE, String pathToIndexCN, List<String> fileList, Boolean cnResourceAvailable, Boolean ignoreDiff, TextPatchPanel textPatchPanel) {
+	public ReplaceEXDF(String pathToIndexSE, String pathToIndexCN, List<String> fileList, Boolean ignoreDiff, TextPatchPanel textPatchPanel) {
 		this.pathToIndexSE = pathToIndexSE;
 		this.pathToIndexCN = pathToIndexCN;
 		this.fileList = fileList;
 		this.ignoreDiff = ignoreDiff;
 		this.textPatchPanel = textPatchPanel;
-		this.cnResourceAvailable = cnResourceAvailable == null ? true : cnResourceAvailable;
+		this.cnResourceAvailable = Config.getProperty("UseCNResource") == null ? true : Boolean.parseBoolean(Config.getProperty("UseCNResource"));
+		this.teemoResourceAvailable = Config.getProperty("UseTeemoResource") == null ? true : Boolean.parseBoolean(Config.getProperty("UseTeemoResource"));
 		this.exQuestMap = new HashMap();
 	}
 
@@ -184,9 +186,9 @@ public class ReplaceEXDF {
 										chunk.writeIntBigEndian(newFFXIVString.length);
 										// 更新文本内容
 										String transKey = replaceFile.substring(0, replaceFile.lastIndexOf(".")).toLowerCase() + "_" + String.valueOf(listEntryIndex) + "_" + String.valueOf(stringCount);
-										if (Config.getConfigResource("transtable") != null && Config.getProperty("transtable", transKey) != null && Config.getProperty("transtable", transKey).length() >0 ){
+										if (teemoResourceAvailable && Config.getConfigResource("transtable") != null && Config.getProperty("transtable", transKey) != null && Config.getProperty("transtable", transKey).length() >0 ){
 											newFFXIVString = ArrayUtil.append(newFFXIVString, HexUtils.hexStringToBytes(Config.getProperty("transtable", transKey)));
-										}else if (Config.getConfigResource("transtring") != null && Config.getProperty("transtring", jaStr) != null && Config.getProperty("transtring", jaStr).length() > 0){
+										}else if (teemoResourceAvailable && Config.getConfigResource("transtring") != null && Config.getProperty("transtring", jaStr) != null && Config.getProperty("transtring", jaStr).length() > 0){
 											newFFXIVString = ArrayUtil.append(newFFXIVString, Config.getProperty("transtring", jaStr).getBytes("UTF-8"));
 										}else if (exQuestMap.get(transKey) != null){
                                             newFFXIVString = ArrayUtil.append(newFFXIVString, exQuestMap.get(transKey));
