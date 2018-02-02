@@ -6,10 +6,7 @@ import link.teemo.sqpack.model.*;
 import link.teemo.sqpack.util.*;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
 
 
@@ -149,7 +146,16 @@ public class EXDFUtil {
                 // 解压本文文件 提取内容
                 EXDFFile ja_exd = new EXDFFile(exdFileJA);
                 HashMap<Integer, byte[]> jaExdList = ja_exd.getEntrys();
-                for (Map.Entry<Integer, byte[]> listEntry : jaExdList.entrySet()) {
+                //转储为List
+                List<Map.Entry<Integer, byte[]>> list = new ArrayList<>(jaExdList.entrySet());
+                //然后通过比较器来实现排序
+                Collections.sort(list,new Comparator<Map.Entry<Integer, byte[]>>() {
+                    //升序排序
+                    public int compare(Map.Entry<Integer, byte[]> o1, Map.Entry<Integer, byte[]> o2) {
+                        return o1.getKey().compareTo(o2.getKey());
+                    }
+                });
+                for (Map.Entry<Integer, byte[]> listEntry : list) {
                     Integer listEntryIndex = listEntry.getKey();
                     EXDFEntry exdfEntryJA = new EXDFEntry(listEntry.getValue(), exhSE.getDatasetChunkSize());
                     String locate = listEntryIndex + "|";

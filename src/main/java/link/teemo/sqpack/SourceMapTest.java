@@ -72,7 +72,7 @@ public class SourceMapTest {
 //        while ((line=bufferedReader.readLine())!=null) {
 //            arrs = line.split("[|]");
 //            if(arrs.length>1)
-//            System.out.println("exd/instancecontenttextdata_" + arrs[0] + "_1=" + HexUtils.bytesToHexStringWithOutSpace(arrs[1].getBytes("UTF-8")));
+//            System.out.println("exd/instancecontenttextdata_" + arrs[0] + "_1=" + HexUtils.bytesToHexStringWithOutSpace(arrs[1].getBytes("UTF-8")).replace(HexUtils.bytesToHexStringWithOutSpace("<br>".getBytes("UTF-8")),"02100103"));
 //        }
 //        srcBufferedReader.close();
 //        srcFileReader.close();
