@@ -66,13 +66,13 @@ public class SourceMapTest {
 //        outWriter.close();
 //        out.close();
 //
-        File file = new File("C:\\Users\\SOX\\Desktop\\4.2\\omegaterminal.txt");
+        File file = new File("C:\\Users\\SOX\\Desktop\\4.2\\instancedatatest.txt");
         FileReader fileReader = new FileReader(file);
         BufferedReader bufferedReader=new BufferedReader(fileReader);
         while ((line=bufferedReader.readLine())!=null) {
             arrs = line.split("[|]");
             if(arrs.length>1)
-            System.out.println("exd/custom/004/RegGyr3OmegaTerminal_00424_".toLowerCase() + arrs[0] + "_2=" + HexUtils.bytesToHexStringWithOutSpace(arrs[1].getBytes("UTF-8")).replace(HexUtils.bytesToHexStringWithOutSpace("<br>".getBytes("UTF-8")),"02100103"));
+            System.out.println("exd/InstanceContentTextData_".toLowerCase() + arrs[0] + "_1=" + HexUtils.bytesToHexStringWithOutSpace(arrs[1].getBytes("UTF-8")).replace(HexUtils.bytesToHexStringWithOutSpace("<br>".getBytes("UTF-8")),"02100103"));
         }
         srcBufferedReader.close();
         srcFileReader.close();
